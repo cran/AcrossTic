@@ -79,17 +79,17 @@ const.mat.dense <- cbind (rep (1:N, each = N-1),
 const.dir <- rep ("=", N)
 const.rhs <- rep (r, N)
 if (relax) all.bin <- FALSE else all.bin <- TRUE
-
 #
 # For lpSolve, upper bounds need to be entered into the constraint
-# matrix. There are N constraints so far; we need to add N more. The
-# ith of these says that variable 1 <= 1. The first column is just the
-# constraint number.
+# matrix. There are N-choose 2 constraints so far; we need to add that
+# many more. The ith new one says that variable i <= 1. 
+# The first column is just the constraint number. 
 #
-uppers <- cbind ((N+1):(2 *N), 1:N, 1)
+nc2 <- N * (N-1) / 2
+uppers <- cbind ((N+1):(N + nc2), 1:nc2, 1)
 const.mat.dense <- rbind (const.mat.dense, uppers)
-const.dir <- c(const.dir, rep ("<", N))
-const.rhs <- c(const.rhs, rep (1, N))
+const.dir <- c(const.dir, rep ("<", nc2))
+const.rhs <- c(const.rhs, rep (1, nc2))
 #
 # Call lpSolve solver
 #
